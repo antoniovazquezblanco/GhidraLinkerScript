@@ -1,0 +1,45 @@
+name: Dependabot for Ghidra
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 12 * * 6'
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  dependabot_ghidra:
+    name: Dependabot for Ghidra
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Check and update Ghidra versions
+        uses: antoniovazquezblanco/setup-ghidra-update@v0.0.9
+        with:
+          auth_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        id: create-pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.TOKEN_GHIDRA_UPDATE }}
+          add-paths: '.github/'
+          branch: dependabot_setup_ghidra
+          delete-branch: true
+          title: 'Bump Ghidra version'
+          body: Bump Ghidra versions in the setup-ghidra action to the latest available versions.
+          assignees: antoniovazquezblanco
+          labels: |
+            dependencies
+            github_actions
+
+      - name: Comment on PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr comment ${{ steps.create-pr.outputs.pull-request-number }} --body "@antoniovazquezblanco A new pull request has been created for the Ghidra version bump."
