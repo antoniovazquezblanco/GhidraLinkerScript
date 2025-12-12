@@ -7,7 +7,7 @@
   <img width="400" src="doc/logo.png" alt="A medieval dragon holding a book with linker script writings">
 </p>
 
-This is a Ghidra extension that provides some user friendly ways to parse small source code snippets into data types.
+This is a Ghidra extension that provides an automated way to parse Linker Scripts (`.ld`) and extract information from them. Currently, the plugin is able to extract symbol names from `PROVIDE` instructions.
 
 ## Installing
 
